@@ -1,23 +1,66 @@
-# Obsidian Sample Plugin
+# Nick's Zettel
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+This plugin is a used to creating, finding, and connecting your Zettelkasten notes. Initially inspired by [Dominik Mayer's Note ID](https://github.com/dominikmayer/obsidian-note-id), id's are placed in your files' front matter then commands/custom views are used to access your files instead of the file explorer.
 
-This project uses TypeScript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
+I have 3 workflows that I've found to cover all my use-cases:
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+- Pure zettel: plain notes with descriptive filenames accessed by built-in search plugin
+- Hierarchy: descriptive filenames with a path property to enable access by this plugin
+- Time: time based filenames organized by projects
 
-## First time developing plugins?
+### TODO
 
-Quick starting guide for new plugin devs:
+Initial specification has the entire UI done through fuzzy search modals, this is to prevent using the file explorer or any custom variant from being used as an anti-pattern. Check back after initial release to re-evaluate.
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
+## Pure Zettel
+
+There is no file organization! Create a blank file however is easiest for you and use the built-in search plugin. My plugin does not augment this workflow at all so you can started with this workflow in any vault! 
+
+## Hierarchy
+
+Files have no organization in your file system, everything just lives in the root folder, but a path property is added to provide a hierarchy. This is used by the hier search 
+
+### Commands
+
+`Search`: search path branches top down and open files
+
+`Create`: navigate path branches then append or insert file to path
+
+## Time
+
+Organize files by project and configure the time period. Then you may create (or open pre-existing) daily or weekly files for this project per the configuration. The files are stored in separate directories for each proejct to prevent filename conflicts. Below are some of my own projects:
+
+| Stats (Daily)   |
+| -------------   |
+| 2025-09-17.md   |
+| 2025-09-18.md   |
+| 2025-09-19.md   |
+| ...             |
+
+| Tasks (Weekly)  |
+| -------------   |
+| 2025-09.md      |
+| 2025-10.md      |
+| 2025-11.md      |
+| ...             |
+
+### Commands
+
+`Today`: open today's or this week's note for the selected project.
+
+`Previous`: open yesterday's or last week's note for the selected project. This is relative to today or the date of the current file. This will NOT create a file if it doesn't exist.
+
+`Next`: open tomorrow's or next week's note for the selected project. This is relative to today or the date of the current file. This WILL create a file if it doesn't exist.
+
+### TODO
+
+- Support "unique" time period: today will always be a new file and open next will not create a new file.
+- More flexible templating for file names and file contents.
+
+---
+
+## Setup for Development
+
 - Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
 - Install NodeJS, then run `npm i` in the command line under your repo folder.
 - Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
@@ -44,18 +87,8 @@ Quick starting guide for new plugin devs:
 - Make sure you have a `README.md` file in the root of your repo.
 - Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
 
-## How to use
-
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
-
-## Manually installing the plugin
-
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
 ## Improve code quality with eslint (optional)
+
 - [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
 - To use eslint with this project, make sure to install eslint from terminal:
   - `npm install -g eslint`
@@ -64,31 +97,5 @@ Quick starting guide for new plugin devs:
   - eslint will then create a report with suggestions for code improvement by file and line number.
 - If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
   - `eslint ./src/`
-
-## Funding URL
-
-You can include funding URLs where people who use your plugin can financially support it.
-
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
-
-```json
-{
-    "fundingUrl": "https://buymeacoffee.com"
-}
-```
-
-If you have multiple URLs, you can also do:
-
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
-```
-
-## API Documentation
 
 See https://github.com/obsidianmd/obsidian-api
