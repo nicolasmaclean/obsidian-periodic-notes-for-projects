@@ -1,6 +1,6 @@
-import { App, Notice, Plugin } from 'obsidian';
+import { App, Editor, MarkdownView, Notice, Plugin } from 'obsidian';
 import { ZettelSettingTab, ZettelSettings }  from 'src/settings';
-import { get_project_from_user, open_file_with_default_template } from 'src/time';
+import { get_project_from_user, open_file_with_default_template, increment_moment } from 'src/time';
 
 
 const DEFAULT_SETTINGS: ZettelSettings = {
@@ -35,16 +35,40 @@ export default class NicksZettelPlugin extends Plugin {
 				await open_file_with_default_template(this.app, project, require('moment')())
 			}
 		});
-		// this.addCommand({
-		// 	id: 'open-previous',
-		// 	name: 'Previous',
-		// 	callback: () => open_previous(this.settings)
-		// });
-		// this.addCommand({
-		// 	id: 'open-next',
-		// 	name: 'Next',
-		// 	callback: () => open_next(this.settings)
-		// });
+		this.addCommand({
+			id: 'create-previous',
+			name: 'Create previous',
+			callback: async () => {
+				if (this.settings.projects.length == 0)
+				{
+					new Notice('You have no projects to open a daily note for. You can add some projects \
+						in the plugin settings!')
+						return;
+				}
+					
+				const project = await get_project_from_user(this.app, this.settings.projects)
+				if (!project) return
+				
+				await open_file_with_default_template(this.app, project, increment_moment(require('moment')(), -1, project.time_period))
+			}
+		})
+		this.addCommand({
+			id: 'create-next',
+			name: 'Create next',
+			callback: async () => {
+				if (this.settings.projects.length == 0)
+				{
+					new Notice('You have no projects to open a daily note for. You can add some projects \
+						in the plugin settings!')
+						return;
+				}
+					
+				const project = await get_project_from_user(this.app, this.settings.projects)
+				if (!project) return
+				
+				await open_file_with_default_template(this.app, project, increment_moment(require('moment')(), 1, project.time_period))
+			}
+		})
 
 		// This adds a simple command that can be triggered anywhere
 		// this.addCommand({

@@ -58,12 +58,12 @@ Example:
 
 1.1.0
 
-- `Create Previous` and `Create Next`
 - `Previous` and `Next`
 
 1.0.0
 
 - [x] `Today`
+- [x] `Create Previous` and `Create Next`
 - [ ] `Set path`
 - [ ] `Path search`
 - [ ] `Create at path`

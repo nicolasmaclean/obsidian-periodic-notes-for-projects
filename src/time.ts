@@ -59,6 +59,21 @@ export async function open_file_with_default_template(app: App, project: Project
     return this.app.workspace.openLinkText(filePath, sourcePath);
 }
 
+export function increment_moment(moment: Moment, increment: number, mode: ETimePeriod)
+    : Moment
+{
+    if (mode == ETimePeriod.Daily)
+    {
+        return moment.add(increment, 'day')
+    }
+    else if (mode == ETimePeriod.Weekly)
+    {
+        return moment.add(increment, 'week')
+    }
+
+    throw new Error('Unsupported ETimePeriod')
+}
+
 // copied from the periodic-notes plugin
 // https://github.com/liamcain/obsidian-periodic-notes/blob/main/src/utils.ts
 function apply_template(filename: string, date: Moment, format: string, rawTemplateContents: string)
