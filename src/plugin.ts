@@ -1,6 +1,6 @@
-import { App, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, Notice, Plugin } from 'obsidian';
 import { ZettelSettingTab, ZettelSettings }  from 'src/settings';
-import { get_project_from_user, get_today_string, open_file_with_default_template } from 'src/time';
+import { get_project_from_user, open_file_with_default_template } from 'src/time';
 
 
 const DEFAULT_SETTINGS: ZettelSettings = {
@@ -18,24 +18,28 @@ export default class NicksZettelPlugin extends Plugin {
 		this.addSettingTab(new ZettelSettingTab(this.app, this))
 		
 		// add commands
+		this.addCommand({
+			id: 'open-today',
+			name: 'Today',
+			callback: async () => {
+				if (this.settings.projects.length == 0)
+				{
+					new Notice('You have no projects to open a daily note for. You can add some projects \
+						in the plugin settings!')
+						return;
+				}
+					
+				const project = await get_project_from_user(this.app, this.settings.projects)
+				if (!project) return
+				
+				await open_file_with_default_template(this.app, project, require('moment')())
+			}
+		});
 		// this.addCommand({
 		// 	id: 'open-previous',
 		// 	name: 'Previous',
 		// 	callback: () => open_previous(this.settings)
 		// });
-		this.addCommand({
-			id: 'open-today',
-			name: 'Today',
-			callback: async () => {
-				// select project
-				const project = await get_project_from_user(this.app, this.settings.projects)
-				if (!project) return
-
-				// lazy-open file
-				const filePath = project.name.toLowerCase() + '/' + get_today_string(project.time_format) + '.md'
-				await open_file_with_default_template(this.app, filePath, project.template_path)
-			}
-		});
 		// this.addCommand({
 		// 	id: 'open-next',
 		// 	name: 'Next',

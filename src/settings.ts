@@ -18,6 +18,7 @@ export class ZettelSettingTab extends PluginSettingTab {
 	}
 
 	private dateSetting(setting: Setting, initialValue: string, setter: (newValue: string) => void)
+        : Setting
 	{
 		const dateDesc = document.createDocumentFragment();  
 		dateDesc.createEl('a', {  
@@ -41,7 +42,9 @@ export class ZettelSettingTab extends PluginSettingTab {
 			);
 	}
 	
-	display(): void {
+	display()
+        : void 
+    {
 		const {containerEl} = this;
 		containerEl.empty();
 

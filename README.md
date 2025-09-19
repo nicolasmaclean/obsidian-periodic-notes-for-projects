@@ -1,80 +1,80 @@
 # Nick's Zettel
 
-This plugin is a used to creating, finding, and connecting your Zettelkasten notes. Initially inspired by [Dominik Mayer's Note ID](https://github.com/dominikmayer/obsidian-note-id), id's are placed in your files' front matter then commands/custom views are used to access your files instead of the file explorer.
+This plugin creates, finds, and organizes your Zettelkasten notes. After starting my journey with [Dominik Mayer's Note ID](https://github.com/dominikmayer/obsidian-note-id), I settled into using these 3 workflows:
 
-I have 3 workflows that I've found to cover all my use-cases:
+- Pure zettel: plain notes with descriptive filenames accessed by the built-in search plugin
+- Hierarchy: plain notes with descriptive filenames, but includes a path property to provide filesystem like organization
+- Time: periodic notes organized by projects
 
-- Pure zettel: plain notes with descriptive filenames accessed by built-in search plugin
-- Hierarchy: descriptive filenames with a path property to enable access by this plugin
-- Time: time based filenames organized by projects
-
-### WIP
-
-create file from template (src/time.open_file_with_default_template)
-maybe I can call access the methods in methods from this [plugin (periodic note)](https://github.com/liamcain/obsidian-periodic-notes)?
-
-
-### TODO
-
-Initial specification has the entire UI done through fuzzy search modals, this is to prevent using the file explorer or any custom variant from being used as an anti-pattern. Check back after initial release to re-evaluate.
+Essentially, I have combined [Note ID](https://github.com/dominikmayer/obsidian-note-id) and [Periodic Notes](https://github.com/liamcain/obsidian-periodic-notes) into a single plugin tailored for my version of Zettelkasten notes that enables you to avoid ever needing any kind of file system viewer. 
 
 ## Pure Zettel
 
-There is no file organization! Create a blank file however is easiest for you and use the built-in search plugin. My plugin does not augment this workflow at all so you can started with this workflow in any vault! 
+There is no file organization! Create notes in the root of your vault and use the built-in search plugin to find them.
+
+My plugin has no tools to streamline this workflow. This works without any plugins!
 
 ## Hierarchy
 
-Files have no organization in your file system, everything just lives in the root folder, but a path property is added to provide a hierarchy. This is used by the hier search 
+This workflow is a compromise between pure zettel and a typical filesystem workflow. All of your notes will sit unorganized at the vault root, but the `path` property in a note enables a hierachical organization that can be explored with `Path search`. Allowing you to find and organize your brain using links, tags, hierachy, and text searches.
 
 ### Commands
 
-`Search`: search path branches top down and open files
+| Name | Description |
+| --- | --- |
+| `Path search` | search path branches top down and open files |
+| `Create at path` | navigate path branches then append or insert file to path |
+| `Set path`* | update the path property in the front matter of the current file |
 
-`Create`: navigate path branches then append or insert file to path
-
-`Set Path`: update the path value in the front matter of the current file
-
+\* available when there is an active note
 ## Time
 
-Organize files by project and configure the time period. Then you may create (or open pre-existing) daily or weekly files for this project per the configuration. The files are stored in separate directories for each proejct to prevent filename conflicts. Below are some of my own projects:
+Access daily and weekly notes organized by "project". See the plugin settings to configure your projects.
 
-| Stats (Daily)   |
-| -------------   |
-| 2025-09-17.md   |
-| 2025-09-18.md   |
-| 2025-09-19.md   |
-| ...             |
+This functionality is heavily inspired [Periodic Notes](https://github.com/liamcain/obsidian-periodic-notes) and a snippet of code from them was used in this plugin.
 
-| Tasks (Weekly)  |
-| -------------   |
-| 2025-09.md      |
-| 2025-10.md      |
-| 2025-11.md      |
-| ...             |
+Example:
+
+| Class (Daily)   | Tasks (Weekly)  | Stats (Daily)   |
+| -------------   | -------------   | -------------   |
+| 2025-09-17.md   | 2025-09.md      | 2025-09-17.md   |
+| 2025-09-18.md   | 2025-10.md      | 2025-09-18.md   |
+| 2025-09-19.md   | 2025-11.md      | 2025-09-19.md   |
+| ...             | ...             | ...             |
 
 ### Commands
 
-`Today`: open today's or this week's note for the selected project.
+| Name | Description |
+| --- | --- |
+| `Today` | open today's or this week's note for a project |
+| `Previous`* | open yesterday's or last week's note for a project. This is relative to the active note. |
+| `Next`* | open tomorrow's or next week's note for a project. This is relative to the active note. |
+| `Create previous`* | open yesterday's or last week's note for a project. This is relative to the active note. |
+| `Create next`* | open tomorrow's or next week's note for a project. This is relative to the active note. |
 
-`Previous`: open yesterday's or last week's note for the selected project. This is relative to today or the date of the current file. This will NOT create a file if it doesn't exist.
+\* available when the active note is a daily or weekly note
 
-`Next`: open tomorrow's or next week's note for the selected project. This is relative to today or the date of the current file. This WILL create a file if it doesn't exist.
+## Roadmap
 
-### TODO
+1.1.0
 
-- Support "unique" time period: today will always be a new file and open next will not create a new file.
-- More flexible templating for file names and file contents.
+- `Create Previous` and `Create Next`
+- `Previous` and `Next`
 
----
+1.0.0
+
+- [x] `Today`
+- [ ] `Set path`
+- [ ] `Path search`
+- [ ] `Create at path`
 
 ## Setup for Development
 
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
+- Download [hot-reload](https://github.com/pjeby/hot-reload)
+- Clone into `.obsidian/plugins/` of a development vault.
 - Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
+- Run `npm run dev`.
+- Enable plugin.
 - For updates to the Obsidian API run `npm update` in the command line under your repo folder.
 
 ## Releasing new releases
@@ -94,16 +94,3 @@ Organize files by project and configure the time period. Then you may create (or
 - Publish an initial version.
 - Make sure you have a `README.md` file in the root of your repo.
 - Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
-
-## Improve code quality with eslint (optional)
-
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint ./src/`
-
-See https://github.com/obsidianmd/obsidian-api
