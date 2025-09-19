@@ -8,6 +8,12 @@ I have 3 workflows that I've found to cover all my use-cases:
 - Hierarchy: descriptive filenames with a path property to enable access by this plugin
 - Time: time based filenames organized by projects
 
+### WIP
+
+create file from template (src/time.open_file_with_default_template)
+maybe I can call access the methods in methods from this [plugin (periodic note)](https://github.com/liamcain/obsidian-periodic-notes)?
+
+
 ### TODO
 
 Initial specification has the entire UI done through fuzzy search modals, this is to prevent using the file explorer or any custom variant from being used as an anti-pattern. Check back after initial release to re-evaluate.
@@ -25,6 +31,8 @@ Files have no organization in your file system, everything just lives in the roo
 `Search`: search path branches top down and open files
 
 `Create`: navigate path branches then append or insert file to path
+
+`Set Path`: update the path value in the front matter of the current file
 
 ## Time
 
