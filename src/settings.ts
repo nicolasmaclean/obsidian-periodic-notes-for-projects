@@ -1,18 +1,18 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
-import NicksZettelPlugin from '../main'
-import { ProjectSetting, ETimePeriod } from 'src/time';
+import ProjectPeriodicNotesPlugin from '../main'
+import { ProjectSetting, ETimePeriod } from 'src/commands';
 
 
-export interface ZettelSettings {
+export interface ProjectPeriodicNotesSettings {
 	daily_format: string
 	weekly_format: string
 	projects: ProjectSetting[]
 }
 
-export class ZettelSettingTab extends PluginSettingTab {
-	plugin: NicksZettelPlugin;
+export class ProjectPeriodicNotesSettingTab extends PluginSettingTab {
+	plugin: ProjectPeriodicNotesPlugin;
 
-	constructor(app: App, plugin: NicksZettelPlugin) {
+	constructor(app: App, plugin: ProjectPeriodicNotesPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
@@ -25,9 +25,20 @@ export class ZettelSettingTab extends PluginSettingTab {
 			text: 'Format reference',  
 			attr: { href: 'https://momentjs.com/docs/#/displaying/format/', target: '_blank' }  
 		});  
+        dateDesc.createEl('span', {  
+			text: ' | ',  
+		});  
+        dateDesc.createEl('a', {  
+			text: 'ISO Format',  
+			attr: { href: 'https://momentjs.com/docs/#/parsing/string/', target: '_blank' }  
+		});  
 		dateDesc.createEl('br');  
 		dateDesc.appendText('Your current syntax looks like this: ');  
-		const dateSampleEl = dateDesc.createEl('b', 'u-pop');  
+		const dateSampleEl = dateDesc.createEl('b', 'u-pop');
+        dateDesc.createEl('br');  
+        dateDesc.createEl('span', {  
+			text: 'For "Open previous" and "Open next" to work reliablely, make sure you use an ISO date string',  
+		});  
 		return setting 
 			.setName('Date format')  
 			.setDesc(dateDesc)  

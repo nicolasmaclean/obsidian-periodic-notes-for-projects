@@ -1,2 +1,2 @@
-import NicksZettelPlugin from "src/plugin";
-export default NicksZettelPlugin
+import ProjectPeriodicNotesPlugin from "src/plugin";
+export default ProjectPeriodicNotesPlugin
