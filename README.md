@@ -1,72 +1,26 @@
-# Nick's Zettel
+# Periodic Notes For Projects
 
-This plugin creates, finds, and organizes your Zettelkasten notes. After starting my journey with [Dominik Mayer's Note ID](https://github.com/dominikmayer/obsidian-note-id), I settled into using these 3 workflows:
+This plugin expands the ideas of [Periodic Notes](https://github.com/liamcain/obsidian-periodic-notes) to organize time periods per project so you could have multiple daily or weekly notes. You can configure your projects in the plugin settings. 
 
-- Pure zettel: plain notes with descriptive filenames accessed by the built-in search plugin
-- Hierarchy: plain notes with descriptive filenames, but includes a path property to provide filesystem like organization
-- Time: periodic notes organized by projects
+For example, I have separate daily notes for class and stats:
+| Class (Daily)       | Tasks (Weekly)        | Stats (Daily)         |
+|---------------------|-----------------------|-----------------------|
+| class/2025-09-17.md | tasks/2025-09.md      | stats/2025-09-17.md   |
+| class/2025-09-18.md | tasks/2025-10.md      | stats/2025-09-18.md   |
+| class/2025-09-19.md | tasks/2025-11.md      | stats/2025-09-19.md   |
+| ...                 | ...                   | ...                   |
 
-Essentially, I have combined [Note ID](https://github.com/dominikmayer/obsidian-note-id) and [Periodic Notes](https://github.com/liamcain/obsidian-periodic-notes) into a single plugin tailored for my version of Zettelkasten notes that enables you to avoid ever needing any kind of file system viewer. 
+## Commands
 
-## Pure Zettel
-
-There is no file organization! Create notes in the root of your vault and use the built-in search plugin to find them.
-
-My plugin has no tools to streamline this workflow. This works without any plugins!
-
-## Hierarchy
-
-This workflow is a compromise between pure zettel and a typical filesystem workflow. All of your notes will sit unorganized at the vault root, but the `path` property in a note enables a hierachical organization that can be explored with `Path search`. Allowing you to find and organize your brain using links, tags, hierachy, and text searches.
-
-### Commands
-
-| Name | Description |
-| --- | --- |
-| `Path search` | search path branches top down and open files |
-| `Create at path` | navigate path branches then append or insert file to path |
-| `Set path`* | update the path property in the front matter of the current file |
-
-\* available when there is an active note
-## Time
-
-Access daily and weekly notes organized by "project". See the plugin settings to configure your projects.
-
-This functionality is heavily inspired [Periodic Notes](https://github.com/liamcain/obsidian-periodic-notes) and a snippet of code from them was used in this plugin.
-
-Example:
-
-| Class (Daily)   | Tasks (Weekly)  | Stats (Daily)   |
-| -------------   | -------------   | -------------   |
-| 2025-09-17.md   | 2025-09.md      | 2025-09-17.md   |
-| 2025-09-18.md   | 2025-10.md      | 2025-09-18.md   |
-| 2025-09-19.md   | 2025-11.md      | 2025-09-19.md   |
-| ...             | ...             | ...             |
-
-### Commands
-
-| Name | Description |
-| --- | --- |
-| `Today` | open today's or this week's note for a project |
-| `Previous`* | open yesterday's or last week's note for a project. This is relative to the active note. |
-| `Next`* | open tomorrow's or next week's note for a project. This is relative to the active note. |
+| Name               | Description                                                                              |
+|--------------------|------------------------------------------------------------------------------------------|
+| `Today`            | open today's or this week's note for a project                                           |
+| `Previous`*        | open yesterday's or last week's note for a project. This is relative to the active note. |
+| `Next`*            | open tomorrow's or next week's note for a project. This is relative to the active note.  |
 | `Create previous`* | open yesterday's or last week's note for a project. This is relative to the active note. |
-| `Create next`* | open tomorrow's or next week's note for a project. This is relative to the active note. |
+| `Create next`*     | open tomorrow's or next week's note for a project. This is relative to the active note.  |
 
-\* available when the active note is a daily or weekly note
-
-## Roadmap
-
-1.1.0
-
-- `Previous` and `Next`
-
-1.0.0
-
-- [x] `Today`
-- [x] `Create Previous` and `Create Next`
-- [ ] `Set path`
-- [ ] `Path search`
-- [ ] `Create at path`
+\* available when the active note is in a project.
 
 ## Setup for Development
 

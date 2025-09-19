@@ -1,9 +1,9 @@
 {
-	"id": "nicks-zettel",
-	"name": "Nick's Zettel",
-	"version": "0.0.1",
+	"id": "periodic-notes-for-projects",
+	"name": "Periodic Notes For Projects",
+	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
+	"description": "Create peroidic notes organized by projects to allow multiple types of daily and weekly notes.",
 	"author": "Nick Maclean",
 	"authorUrl": "https://nick.imaclean.me",
 	"isDesktopOnly": false
