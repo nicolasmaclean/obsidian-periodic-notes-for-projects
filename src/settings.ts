@@ -61,7 +61,6 @@ export class ProjectPeriodicNotesSettingTab extends PluginSettingTab {
 
 		const projectGroup = new Setting(containerEl)
 			.setName("Projects")
-		projectGroup.settingEl.style.borderTop = 'none';
 
 		if (this.plugin.settings.projects.length == 0)
 		{
@@ -96,7 +95,6 @@ export class ProjectPeriodicNotesSettingTab extends PluginSettingTab {
                         this.display(); // refresh UI
                     })
                 );
-            // row.settingEl.style.borderTop = 'none';
             const projectDateFormat = new Setting(containerEl)
                 .addDropdown(dd => dd
                     .addOption(ETimePeriod.Daily, 'Daily')
@@ -107,7 +105,7 @@ export class ProjectPeriodicNotesSettingTab extends PluginSettingTab {
                         await this.plugin.saveSettings();
                     })
                 )
-            projectDateFormat.settingEl.style.borderTop = 'none';
+                .setClass('setting-no-border')
             this.dateSetting(projectDateFormat, project.time_format, (newValue) => project.time_format = newValue);
             new Setting(containerEl)
                 .setName('Template Path')
@@ -118,7 +116,7 @@ export class ProjectPeriodicNotesSettingTab extends PluginSettingTab {
                         this.plugin.saveSettings();
                     })
                 )
-                .settingEl.style.borderTop = 'none';
+                .setClass('setting-no-border')
         });
 
         new Setting(containerEl)
