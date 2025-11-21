@@ -1,5 +1,4 @@
 import { App, Notice } from 'obsidian';
-import type { Moment } from "moment";
 import { StringSelectModal } from './search';
 import ProjectPeriodicNotesPlugin from 'main';
 
@@ -41,7 +40,7 @@ export function get_commands(plugin: ProjectPeriodicNotesPlugin) {
 export class ProjectSetting {
     name: string
     time_period: ETimePeriod = ETimePeriod.Daily
-    time_format: string = 'YYYY-MM-DD'
+    time_format = 'YYYY-MM-DD'
     template_path: string
 }
 
@@ -65,7 +64,7 @@ async function create_today(plugin: ProjectPeriodicNotesPlugin)
     const project = await get_project_from_user(plugin.app, plugin.settings.projects)
     if (!project) return false;
     
-    return open_file_with_default_template(plugin.app, project, require('moment')())
+    return open_file_with_default_template(plugin.app, project, window.moment())
 }
 
 function create_adjacent(plugin: ProjectPeriodicNotesPlugin, checking: boolean, increment: number)
@@ -74,15 +73,19 @@ function create_adjacent(plugin: ProjectPeriodicNotesPlugin, checking: boolean, 
     // handle checking
     const file = plugin.app.workspace.getActiveFile(); // currently open note
     if (!file) return false
-    const project = plugin.settings.projects.find(p => p.name.toLowerCase() === file.parent?.path.toLowerCase())
+    const project = plugin.settings.projects.find(p => p.name.toLowerCase() === file.parent?.path.toLowerCase()) // get project for note
     if (!project) return false
     if (checking) return true
 
     // get moment from active file
     const filename = file.basename
-    let moment = require('moment')(filename, project.time_format)
+    const moment = window.moment(filename, project.time_format)
     
     open_file_with_default_template(plugin.app, project, increment_moment(moment, increment, project.time_period))
+        .catch((reason) => {
+            console.error(`Unhandled error while creating (or opening) file from ${project.template_path}:\n\n${reason}`)
+            new Notice('Unhandled error while creating (or opening) file from template.')
+        })
     return true
 }
 
@@ -92,13 +95,13 @@ function open_adjacent(plugin: ProjectPeriodicNotesPlugin, checking: boolean, in
     // handle checking
     const file = plugin.app.workspace.getActiveFile(); // currently open note
     if (!file) return false
-    const project = plugin.settings.projects.find(p => p.name.toLowerCase() === file.parent?.path.toLowerCase())
+    const project = plugin.settings.projects.find(p => p.name.toLowerCase() === file.parent?.path.toLowerCase()) // get project for note
     if (!project) return false
     if (checking) return true
 
     // get moment from active file
 	const filename = file.basename
-	let moment = require('moment')(filename, project.time_format)
+	let moment = window.moment(filename, project.time_format)
 	moment = increment_moment(moment, increment, project.time_period)
 
 	// iterate till we find the adjacent note
@@ -128,7 +131,7 @@ async function get_project_from_user(app: App, projects: ProjectSetting[])
     return Promise.resolve(projects.find(p => p.name === projectModal.selected));
 }
 
-async function open_file_with_default_template(app: App, project: ProjectSetting, moment: Moment, sourcePath: string = '')
+async function open_file_with_default_template(app: App, project: ProjectSetting, moment: moment.Moment, sourcePath = '')
     : Promise<boolean>
 {
     const filename = moment.format(project.time_format)
@@ -143,7 +146,7 @@ async function open_file_with_default_template(app: App, project: ProjectSetting
             const templateFile = app.metadataCache.getFirstLinkpathDest(project.template_path, '')
             contents = await app.vault.cachedRead(templateFile!);
         }
-        catch (err) {
+        catch {
             console.error(`Failed to read template at ${project.template_path}`)
             new Notice('Failed to read template')
             return false
@@ -160,7 +163,7 @@ async function open_file_with_default_template(app: App, project: ProjectSetting
     return true
 }
 
-function try_to_open_file(app: App, project: ProjectSetting, moment: Moment, sourcePath: string = '')
+function try_to_open_file(app: App, project: ProjectSetting, moment: moment.Moment, sourcePath: string = '')
     : boolean
 {
     const filename = moment.format(project.time_format)
@@ -169,15 +172,19 @@ function try_to_open_file(app: App, project: ProjectSetting, moment: Moment, sou
     
     if (app.vault.getFileByPath(filePath) !== null)
     {
-        app.workspace.openLinkText(filePath, sourcePath);
-        return true;
+        app.workspace.openLinkText(filePath, sourcePath)
+            .catch((reason) => {
+                console.error(`Unable to open file at ${filePath}: \n\n ${reason}`)
+                new Notice('Unable to open file')
+            })
+        return true
     }
 
-    return false;
+    return false
 }
 
-function increment_moment(moment: Moment, increment: number, mode: ETimePeriod)
-    : Moment
+function increment_moment(moment: moment.Moment, increment: number, mode: ETimePeriod)
+    : moment.Moment
 {
     if (mode == ETimePeriod.Daily)
     {
@@ -193,7 +200,7 @@ function increment_moment(moment: Moment, increment: number, mode: ETimePeriod)
 
 // copied from the periodic-notes plugin
 // https://github.com/liamcain/obsidian-periodic-notes/blob/main/src/utils.ts
-function apply_template(filename: string, date: Moment, format: string, rawTemplateContents: string)
+function apply_template(filename: string, date: moment.Moment, format: string, rawTemplateContents: string)
     : string 
 {
     let templateContents = rawTemplateContents;
@@ -236,7 +243,7 @@ function getDaysOfWeek()
     : string[] 
 {
     const { moment } = window;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // `any as` is just a little bit of trickery to get the 1st day of the week
     let weekStart = (moment.localeData() as any)._week.dow;
     const daysOfWeek = [
         "sunday",

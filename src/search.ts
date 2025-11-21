@@ -31,7 +31,7 @@ export class StringSelectModal extends FuzzySuggestModal<string> {
     getItemText(item: string): string { return item; }
     renderSuggestion(item: FuzzyMatch<string>, el: HTMLElement): void { el.createEl("div", { text: item.item }); }
 
-    async onChooseItem(item: string, _evt: MouseEvent | KeyboardEvent): Promise<void> {
+    onChooseItem(item: string, _evt: MouseEvent | KeyboardEvent): void {
         if (this.resolve) this.resolve();
         this.selected = item;
     }

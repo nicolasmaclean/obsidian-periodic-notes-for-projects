@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting } from 'obsidian';
+import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
 import ProjectPeriodicNotesPlugin from '../main'
 import { ProjectSetting, ETimePeriod } from 'src/commands';
 
@@ -29,26 +29,22 @@ export class ProjectPeriodicNotesSettingTab extends PluginSettingTab {
 			text: ' | ',  
 		});  
         dateDesc.createEl('a', {  
-			text: 'ISO Format',  
+			text: 'ISO format',  
 			attr: { href: 'https://momentjs.com/docs/#/parsing/string/', target: '_blank' }  
 		});  
 		dateDesc.createEl('br');  
 		dateDesc.appendText('Your current syntax looks like this: ');  
 		const dateSampleEl = dateDesc.createEl('b', 'u-pop');
         dateDesc.createEl('br');  
-        dateDesc.createEl('span', {  
-			text: 'For "Open previous" and "Open next" to work reliablely, make sure you use an ISO date string',  
-		});  
 		return setting 
 			.setName('Date format')  
 			.setDesc(dateDesc)  
 			.addMomentFormat(momentFormat => momentFormat  
 				.setValue(initialValue)  
 				.setSampleEl(dateSampleEl)  
-				.onChange(async (value) => {  
-					setter(value)
-					// this.plugin.settings.daily_format = value;  
-					await this.plugin.saveSettings();  
+				.onChange((value) => {  
+                    setter(value)
+					this.saveSettings()
 				})
 			);
 	}
@@ -69,7 +65,7 @@ export class ProjectPeriodicNotesSettingTab extends PluginSettingTab {
 				.onClick(() => {
 					// Append a blank entry and re‑render
 					this.plugin.settings.projects.push(new ProjectSetting());
-					this.plugin.saveSettings().then(() => this.display());
+                    this.saveSettings(true)
 				})
 			)
             return;
@@ -77,22 +73,21 @@ export class ProjectPeriodicNotesSettingTab extends PluginSettingTab {
         
         this.plugin.settings.projects.forEach((project, idx) => {
             new Setting(containerEl)
-                .setName('Project Name')
+                .setName('Project name')
                 .addText(text => text
                     .setPlaceholder("Project name...")
                     .setValue(project.name)
-                    .onChange(async (newVal) => {
+                    .onChange( (newVal) => {
                         project.name = newVal;
-                        await this.plugin.saveSettings();
+                        this.saveSettings()
                     })
                 )
                 .addExtraButton(extra => extra
                     .setIcon("trash")
                     .setTooltip("Remove this item")
-                    .onClick(async () => {
+                    .onClick(() => {
                         this.plugin.settings.projects.splice(idx, 1);
-                        await this.plugin.saveSettings();
-                        this.display(); // refresh UI
+                        this.saveSettings(true)
                     })
                 );
             const projectDateFormat = new Setting(containerEl)
@@ -100,20 +95,20 @@ export class ProjectPeriodicNotesSettingTab extends PluginSettingTab {
                     .addOption(ETimePeriod.Daily, 'Daily')
                     .addOption(ETimePeriod.Weekly, 'Weekly')
                     .setValue(project.time_period)
-                    .onChange(async (newVal) => {
+                    .onChange((newVal) => {
                         project.time_period = newVal as ETimePeriod;
-                        await this.plugin.saveSettings();
+                        this.saveSettings()
                     })
                 )
                 .setClass('setting-no-border')
             this.dateSetting(projectDateFormat, project.time_format, (newValue) => project.time_format = newValue);
             new Setting(containerEl)
-                .setName('Template Path')
+                .setName('Template path')
                 .addText(text => text
                     .setValue(project.template_path)
-                    .onChange(async (newVal) => {
+                    .onChange((newVal) => {
                         project.template_path = newVal;
-                        this.plugin.saveSettings();
+                        this.saveSettings()
                     })
                 )
                 .setClass('setting-no-border')
@@ -125,7 +120,21 @@ export class ProjectPeriodicNotesSettingTab extends PluginSettingTab {
                 .onClick(() => {
                     // Append a blank entry and re‑render
                     this.plugin.settings.projects.push(new ProjectSetting());
-                    this.plugin.saveSettings().then(() => this.display());
+                    this.saveSettings(true)
                 }))
+    }
+
+    saveSettings(refreshUI = false)
+    {
+        this.plugin.saveSettings().then(
+            () => { 
+                if (refreshUI) 
+                    this.display()
+            },
+            (reason) => {
+                console.log(`Failed to save settings:\n\n${reason}`);
+                new Notice(`Failed to save settings`);
+            }
+        );
     }
 }
