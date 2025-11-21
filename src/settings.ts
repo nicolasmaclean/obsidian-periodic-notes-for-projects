@@ -29,7 +29,7 @@ export class ProjectPeriodicNotesSettingTab extends PluginSettingTab {
 			text: ' | ',  
 		});  
         dateDesc.createEl('a', {  
-			text: 'ISO format',  
+			text: 'iso format',  
 			attr: { href: 'https://momentjs.com/docs/#/parsing/string/', target: '_blank' }  
 		});  
 		dateDesc.createEl('br');  
@@ -132,7 +132,7 @@ export class ProjectPeriodicNotesSettingTab extends PluginSettingTab {
                     this.display()
             },
             (reason) => {
-                console.log(`Failed to save settings:\n\n${reason}`);
+                console.error(`Failed to save settings:\n\n${reason}`);
                 new Notice(`Failed to save settings`);
             }
         );

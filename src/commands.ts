@@ -243,8 +243,7 @@ function getDaysOfWeek()
     : string[] 
 {
     const { moment } = window;
-    // `any as` is just a little bit of trickery to get the 1st day of the week
-    let weekStart = (moment.localeData() as any)._week.dow;
+    let weekStart = moment.localeData().firstDayOfWeek();
     const daysOfWeek = [
         "sunday",
         "monday",
