@@ -163,7 +163,7 @@ async function open_file_with_default_template(app: App, project: ProjectSetting
     return true
 }
 
-function try_to_open_file(app: App, project: ProjectSetting, moment: moment.Moment, sourcePath: string = '')
+function try_to_open_file(app: App, project: ProjectSetting, moment: moment.Moment, sourcePath = '')
     : boolean
 {
     const filename = moment.format(project.time_format)
